@@ -10,16 +10,19 @@
 </head>
 <body>
 <h1> Chat Application </h1>
-<form class="username-form" method="post" action="">
-  <label >USERNAME: </label>
-  <input type="text" />
+
+  <form class="username-form" method="post" action="">
+  <label >USERNAME*: </label>
+  <input type="text" required/>
+<!--    <input id="username" type="text" required/> -->
   <input type="submit" value="Join" />
   <input type="reset" value="cancel" />
  </form>
+  
 
 <form class="chat-form" method="post" action="">
-  <div>Hey there, <span id="username">Guest</span></div>
-  <label>To:</label> <input id="recipient" /><br />
+  <div>Hey there, <span id="username">username</span></div>
+  <label>To:</label> <input id="recipient" type="text"/><br />
   <label>Message: </label><br />
   <textarea id="message"></textarea>
   <input type="submit" value="Send" />
@@ -33,15 +36,27 @@
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
+
 <script>
   var socket = io.connect('http://localhost:3000');
-
+   
   // Add a username
+  //var username = $("#username")
+  var username = ""
+ // var username = $(this).children("input").val();
   $(".username-form").on("submit", function(){
-
+    
     // Tell the server about it
-    var username = $(this).children("input").val();
+    
+    username = $(this).children("input").val();
     socket.emit("add-user", {"username": username});
+
+    // Whenever we receieve a message, append it to the <ul>
+   socket.on("add-message", function(data){
+   $("#messages").append($("<li>", {
+    "text": data.content+""+username
+   }));
+   });
 
     // Remove this form and show the chat form
     $(this).remove();
@@ -50,27 +65,24 @@
     return false;
   });
 
+
   // Chat form
  var chat_form = $(".chat-form");
  chat_form.on("submit", function(){
-
    // Send the message to the server
    socket.emit("private-message", {
     "username": $(this).find("input:first").val(),
     "content": $(this).find("textarea").val()
+    // username: recipient.val(),
+   // content: message.val()
    });
-
+      
    // Empty the form
    $(this).find("input:first, textarea").val('');
-  return false;
+   return false;
  });
 
- // Whenever we receieve a message, append it to the <ul>
- socket.on("add-message", function(data){
-  $("#messages").append($("<li>", {
-    "text": data.content
-  }));
- });
+
 </script>
 </body>
 </html>
