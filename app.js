@@ -1,11 +1,12 @@
 var app = require('http').createServer(handler);
 var io = require('socket.io').listen(app);
 var fs = require('fs');
-
+//var array = "testing"
 app.listen(3000);
 console.log("running on port NO:3000");
 
 var clients = {};
+var array = []
 
 function handler (req, res) {
   fs.readFile(__dirname + '/index.html',
@@ -20,18 +21,23 @@ function handler (req, res) {
   });
 }
 
+function display() {
+   alert("sample testing");
+}
+
 io.sockets.on('connection', function (socket) {
-  
+ 
   socket.on('add-user', function(data){
-    console.log("NEW USER CONNECTED");
+    array.push(data.username)
+    console.log(array)
     clients[data.username] = {
       "socket": socket.id
     };
-  });
-
+  }); 
 
   socket.on('private-message', function(data){
-    console.log("Sending: " + data.content + " to " + data.username);
+  
+    console.log("Sending: " + data.content + " to " + data.username );
     if (clients[data.username]){
       io.sockets.connected[clients[data.username].socket].emit("add-message", data);
     } else {
@@ -50,6 +56,5 @@ io.sockets.on('connection', function (socket) {
   })
 
 });
-
 
 
