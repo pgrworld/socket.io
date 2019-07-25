@@ -1,12 +1,11 @@
 var app = require('http').createServer(handler);
 var io = require('socket.io').listen(app);
 var fs = require('fs');
-//var array = "testing"
+
 app.listen(3000);
 console.log("running on port NO:3000");
 
 var clients = {};
-var array = []
 
 function handler (req, res) {
   fs.readFile(__dirname + '/index.html',
@@ -21,25 +20,22 @@ function handler (req, res) {
   });
 }
 
-function display() {
-   alert("sample testing");
-}
 
+var array = []
 io.sockets.on('connection', function (socket) {
  
-  socket.on('add-user', function(data){
-    array.push(data.username)
-    console.log(array)
+  socket.on('add-user', function(data){  
+  array.push(data.username)
+  console.log(array)
     clients[data.username] = {
       "socket": socket.id
     };
   }); 
 
   socket.on('private-message', function(data){
-  
-    console.log("Sending: " + data.content + " to " + data.username );
+   console.log(data.text +":" +data.content + " to " + data.username );
     if (clients[data.username]){
-      io.sockets.connected[clients[data.username].socket].emit("add-message", data);
+      io.sockets.connected[clients[data.username].socket].emit("add-message", data,array);
     } else {
       console.log("User does not exist: " + data.username); 
     }
@@ -55,6 +51,12 @@ io.sockets.on('connection', function (socket) {
   	}	
   })
 
+   socket.emit('userlist', (array) => {    
+    });
+
 });
+
+
+
 
 
