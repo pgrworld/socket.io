@@ -29,12 +29,13 @@ var array = []                     //joining users list
 var joinuser=""                    //username
 var msg=""                         //message
 var touser = ""                    //sending username
+var output =[]
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){    
     array.push(data.username)
     joinuser = data.username
-    console.log(array)
+    //console.log(array)
     clients[data.username] = {
     "socket": socket.id
   };
@@ -42,39 +43,41 @@ io.sockets.on('connection', function (socket) {
     var sql = "INSERT INTO socketTABLE (JOINUSER) VALUES ('"+joinuser+"')";
     con.query(sql, function (err, res) {
     if (err) throw err;
-    console.log("SQL: join username inserted");
+    console.log("username inserted");
     });
-
+    
+    con.query('select FROMUSER,MSG FROM socketTABLE1 WHERE TOUSER=?', [joinuser], function(err, res){
+      output=JSON.stringify(res)
+   if (err){
+      throw err;
+   }else{
+      console.log(res)
+    }
+   });
+   
   }); 
-
-
 
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username );  
+   fromuser=data.text
    touser=data.username
-    msg=data.content
+   //touser1.push(touser)
+   //console.log(touser1)
+   msg=data.content
 
-    var sql = "INSERT INTO socketTABLE1 (FROMUSER,TOUSER,MSG) VALUES ('"+data.text+"','"+touser+"','"+msg+"')";
+    var sql = "INSERT INTO socketTABLE1 (JOINUSERS,FROMUSER,TOUSER,MSG) VALUES ('"+data.text+"','"+data.text+"','"+touser+"','"+msg+"')";
     con.query(sql, function (err, res) {
     if (err) throw err;
-    console.log("SQL: touser and message inserted");
+    console.log("SQL: JOINUSERS & FROMUSER & TOUSER & MSG inserted");
     });
 
-    con.query('SELECT MSG FROM socketTABLE1 WHERE FROMUSER=?', [joinuser], function(err, res){
-   if (err){
-      throw err;
-    }else{
-      console.log("login success")
-    }
-  });
-
-
    if (clients[data.username]){
-   io.sockets.connected[clients[data.username].socket].emit("add-message", data,array);
+   io.sockets.connected[clients[data.username].socket].emit("add-message", data,array,output);
      } else {
       console.log("User does not exist: " + data.username); 
      }
    });
+
 
   //Removing the socket on disconnect
   socket.on('disconnect', function() {
