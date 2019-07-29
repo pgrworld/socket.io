@@ -74,14 +74,13 @@
  });
 
  // Whenever we receieve a message, append it to the <ul>
-   socket.on("add-message", function(data,array){
+   socket.on("add-message", function(data,array,output){
    $("#messages").append($("<li>", {
-    "text":data.text+":"+data.content+" "+" "+ " USERSLIST: "+array
+    "text":data.text+":"+data.content+" "+" "+ " USERSLIST: "+array+" "+"previous msg:"+output
    }));
    });
 
 </script>
 </body>
 </html>
-
 
