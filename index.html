@@ -22,19 +22,19 @@
   </form>
 
 <form class="chat-form" method="post" action="">
-  <div>Hey there, <span id="output1"></span></div>
+  <div>Hey there, <span id="username"></span></div>
   <label>To:</label> <input id="recipient" type="text"/><br />
   <label>Message: </label><br /> 
   <textarea id="message"></textarea> 
   <input type="submit" value="Send" />
   <input type="reset" value="cancel" />
-  <input type = "button" onclick = "userlist()" id="output1" value = "previous msgs" /> 
+<!--   <input type = "button" onclick = "userlist()" id="output1" value = "previous msgs" />  -->
   <ul id="messages">
   </ul>
 </form>
 
+ <p id="userlist"></p>
  <p id="output"></p>
-
 
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
@@ -45,27 +45,21 @@
   $(".username-form").on("submit", function(){
     
    var username=$(this).children("input").val();
-  // document.getElementById("demo").innerHTML=array;
    user=username
    socket.emit("add-user", {"username": username});  
+
     // Remove this form and show the chat form 
     $(this).remove();
     $("#username").text(username);
     chat_form.show();
-     // socket.on('output', function(data){
-     // var output1 = data
-    // document.getElementById('output').innerHTML = output;
+    
+      socket.on('output', function(data1,data2){
+      document.getElementById('userlist').innerHTML ="USERSLIST:  "+data1;
+      document.getElementById('output').innerHTML ="previous msgs: "+data2;
+
+    });
     return false;
  });
-
-   //   socket.on('output', function(data){ 
-   //   document.getElementById('output').innerHTML = data;
-   // }
-
-  //  function userlist(){
-  //   //var output1=""
-  //  document.getElementById('output').innerHTML = output1;
-  // };
 
   // Chat form
  var chat_form = $(".chat-form");
@@ -85,13 +79,10 @@
  // Whenever we receieve a message, append it to the <ul>
    socket.on("add-message", function(data,array,output){
    $("#messages").append($("<li>", {
-   "text":data.text+":"+data.content+" "+ " USERSLIST: "+array+" "+"previous msg:"+output
+   "text":"New Msg From "+data.text+":"+data.content    //+" "+ " USERSLIST: "+array+" "+"previous msg:"+output
    }));
   });
 
 </script>
 </body>
 </html>
-
-
-
