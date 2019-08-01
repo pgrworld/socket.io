@@ -31,10 +31,15 @@ io.sockets.on('connection', function (socket) {
   };
      
      sql.function1()
-     //socket.emit("output", array);
+
+     exports.myFunction = function(){
+     var output = sql.output;
+     socket.emit("output",array,output);
+     }
+          
   }); 
-  
-  
+    
+
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username );  
    exports.fromuser=data.text
@@ -42,15 +47,13 @@ io.sockets.on('connection', function (socket) {
    exports.msg=data.content
 
     sql.function2()
-    console.log(sql.output)
 
    if (clients[data.username]){
-   io.sockets.connected[clients[data.username].socket].emit("add-message", data,array,sql.output);
+   io.sockets.connected[clients[data.username].socket].emit("add-message", data);    //array,sql.output);
      } else {
       console.log("User does not exist: " + data.username); 
      }
    });
-
 
   //Removing the socket on disconnect
   socket.on('disconnect', function() {
@@ -63,6 +66,7 @@ io.sockets.on('connection', function (socket) {
   })
 
 });
+
 
 
 
