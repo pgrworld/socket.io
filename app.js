@@ -21,11 +21,6 @@ function handler (req, res) {
  }
 
 var array = []                     //joining users list
-var joinuser=""                    //username
-var msg=""                         //message
-var touser = ""                    //sending username
-var output =""
-var fromuser=""
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){    
@@ -34,12 +29,12 @@ io.sockets.on('connection', function (socket) {
     clients[data.username] = {
     "socket": socket.id
   };
-
-    sql.function1()
-
+     
+     sql.function1()
+     //socket.emit("output", array);
   }); 
-
-
+  
+  
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username );  
    exports.fromuser=data.text
@@ -68,6 +63,12 @@ io.sockets.on('connection', function (socket) {
   })
 
 });
+
+
+
+
+
+
 
 
 
