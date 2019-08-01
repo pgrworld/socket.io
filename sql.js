@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var imp = require("./app.js")
-//var output=""
+var today = ""
+var time = ""
 var con = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -8,9 +9,8 @@ var con = mysql.createConnection({
   database: "socket"
  });
 
-
  exports.function1=function(){
-    con.query('select FROMUSER,MSG FROM socketTABLE1 WHERE TOUSER=?', [imp.joinuser], function(err, res){
+    con.query('select FROMUSER,MSG,TIME FROM socketTABLE1 WHERE TOUSER=?', [imp.joinuser], function(err, res){
       exports.output=JSON.stringify(res)
    if (err){
       throw err;
@@ -20,12 +20,13 @@ var con = mysql.createConnection({
    });
 };
 
-
 exports.function2=function(){
-	var sql = "INSERT INTO socketTABLE1 (JOINUSERS,FROMUSER,TOUSER,MSG) VALUES ('"+imp.fromuser+"','"+imp.fromuser+"','"+imp.touser+"','"+imp.msg+"')";
+	today=new Date();
+	time=today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	console.log(time)
+	var sql = "INSERT INTO socketTABLE1 (JOINUSERS,FROMUSER,TOUSER,MSG,TIME) VALUES ('"+imp.fromuser+"','"+imp.fromuser+"','"+imp.touser+"','"+imp.msg+"','"+time+"')";
     con.query(sql, function (err, res) {
     if (err) throw err;
     console.log("SQL: JOINUSERS & FROMUSER & TOUSER & MSG inserted");
     });
 }
-
