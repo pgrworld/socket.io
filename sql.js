@@ -9,9 +9,11 @@ var con = mysql.createConnection({
   database: "socket"
  });
 
+
  exports.function1=function(){
     con.query('select FROMUSER,MSG,TIME FROM socketTABLE1 WHERE TOUSER=?', [imp.joinuser], function(err, res){
       exports.output=JSON.stringify(res)
+      imp.myFunction()
    if (err){
       throw err;
    }else{
@@ -19,6 +21,7 @@ var con = mysql.createConnection({
     }
    });
 };
+
 
 exports.function2=function(){
 	today=new Date();
@@ -30,3 +33,6 @@ exports.function2=function(){
     console.log("SQL: JOINUSERS & FROMUSER & TOUSER & MSG inserted");
     });
 }
+
+
+
