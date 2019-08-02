@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>CHAT APPLICATION</title>
-<!--   <link rel="stylesheet" type="text/css" href="/theme.css">  -->
+  <link rel="stylesheet" type="text/css" href="/theme.css"> 
   <style>
     .chat-form { display: none; }
     body {
@@ -23,12 +23,12 @@
 
 <form class="chat-form" method="post" action="">
   <div>Hey there, <span id="username"></span></div>
-  <label>To:</label> <input id="recipient" type="text"/><br />
+  <label>To:</label> <input id="recipient" type="text" required/><br />
   <label>Message: </label><br /> 
-  <textarea id="message"></textarea> 
+  <textarea id="message" required></textarea> 
   <input type="submit" value="Send" />
   <input type="reset" value="cancel" />
-<!--   <input type = "button" onclick = "userlist()" id="output1" value = "previous msgs" />  -->
+  <input type = "button" onclick = "userlist()" value = "ClearData"/> 
   <ul id="messages">
   </ul>
 </form>
