@@ -25,8 +25,7 @@ var con = mysql.createConnection({
 
 exports.function2=function(){
 	today=new Date();
-	time=today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-	console.log(time)
+	time= today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 	var sql = "INSERT INTO socketTABLE1 (JOINUSERS,FROMUSER,TOUSER,MSG,TIME) VALUES ('"+imp.fromuser+"','"+imp.fromuser+"','"+imp.touser+"','"+imp.msg+"','"+time+"')";
     con.query(sql, function (err, res) {
     if (err) throw err;
@@ -34,5 +33,14 @@ exports.function2=function(){
     });
 }
 
+//today.getYear()+":"+ today.getMonth()+":"+ today.getDate()+":"+
 
-
+exports.clearDATA=function(){
+	con.query('delete from socketTABLE1 where TOUSER=?',[imp.joinuser],function(err,res){
+		if(err){
+			throw err;
+		}else{
+			console.log("previous msgs deleted")
+		}
+	});
+}
