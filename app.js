@@ -20,16 +20,17 @@ function handler (req, res) {
   });
  }
 
-var array = []                     //joining users list
+var array = ""                     //joining users list
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){    
-    array.push(data.username)
+   // array.push(data.username)
     exports.joinuser = data.username
     clients[data.username] = {
     "socket": socket.id
   };
-     
+     console.log(Object.keys(clients));
+     array = Object.keys(clients)
      sql.function1()
 
      exports.myFunction = function(){
@@ -46,7 +47,8 @@ io.sockets.on('connection', function (socket) {
    exports.touser=data.username
    exports.msg=data.content
 
-    sql.function2()
+     sql.function2()
+    //sql.clearDATA()
 
    if (clients[data.username]){
    io.sockets.connected[clients[data.username].socket].emit("add-message", data);    //array,sql.output);
@@ -66,13 +68,6 @@ io.sockets.on('connection', function (socket) {
   })
 
 });
-
-
-
-
-
-
-
 
 
 
