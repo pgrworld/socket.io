@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>CHAT APPLICATION</title>
-  <link rel="stylesheet" type="text/css" href="/theme.css"> 
+  <link rel="stylesheet" type="text/css" href="theme.css"> 
   <style>
     .chat-form { display: none; }
     body {
@@ -12,7 +12,7 @@
   </style>
 </head>
 <body>
-<h1> Chat Application </h1>
+<h1 > Chat Application </h1>
 
   <form class="username-form" method="post" action="">
   <label >USERNAME*: </label>
@@ -28,20 +28,25 @@
   <textarea id="message" required></textarea> 
   <input type="submit" value="Send" />
   <input type="reset" value="cancel" />
-  <input type = "button" onclick = "userlist()" value = "ClearData"/> 
-  <ul id="messages">
+<!--   <input type = "button" onclick = "userlist()" value = "ClearData"/> 
+ -->  <ul id="messages">
   </ul>
 </form>
 
  <p id="userlist"></p>
  <p id="output"></p>
+ <p id="disconnectUL"></p> 
 
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
+
+
+
   <script>
   var socket = io.connect('http://localhost:3000');
   var user = ""
+  // var disconnectedUL=""
   $(".username-form").on("submit", function(){
     
    var username=$(this).children("input").val();
@@ -53,10 +58,10 @@
     $("#username").text(username);
     chat_form.show();
     
-      socket.on('output', function(data1,data2){
-      document.getElementById('userlist').innerHTML ="USERSLIST:  "+data1;
-      document.getElementById('output').innerHTML ="previous msgs: "+data2;
-
+    socket.on('output', function(data1,data2,data3){
+    document.getElementById('userlist').innerHTML ="USERSLIST:  "+data1;
+    document.getElementById('disconnectUL').innerHTML ="Disconnected Userslist : "+data2
+    document.getElementById('output').innerHTML ="previous msgs: "+data3;  
     });
     return false;
  });
@@ -83,6 +88,12 @@
    }));
   });
 
+   // socket.on("disconnectUL",function(array2){
+   // disconnectedUL=array2
+   // //document.getElementById('disconnectUL').innerHTML ="disconnectUL: "+array2;
+   // })
+
 </script>
 </body>
 </html>
+
