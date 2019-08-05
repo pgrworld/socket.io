@@ -21,6 +21,8 @@ function handler (req, res) {
  }
 
 var array = ""                     //joining users list
+var array2 = []                    //leftout users list
+
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){    
@@ -28,14 +30,14 @@ io.sockets.on('connection', function (socket) {
     exports.joinuser = data.username
     clients[data.username] = {
     "socket": socket.id
-  };
-     console.log(Object.keys(clients));
+  }; 
+
      array = Object.keys(clients)
      sql.function1()
 
      exports.myFunction = function(){
      var output = sql.output;
-     socket.emit("output",array,output);
+     socket.emit("output",array,array2,output);
      }
           
   }); 
@@ -57,19 +59,28 @@ io.sockets.on('connection', function (socket) {
      }
    });
 
-  //Removing the socket on disconnect
+  // //Removing the socket on disconnect
+  // socket.on('disconnect', function() {
+  // 	for(var name in clients) {
+  // 		if(clients[name].socket === socket.id) {
+  // 			delete clients[name];
+  // 			break;
+  // 		}
+  // 	}	
+  // })
+
+    //Removing the socket on disconnect
   socket.on('disconnect', function() {
-  	for(var name in clients) {
-  		if(clients[name].socket === socket.id) {
-  			delete clients[name];
-  			break;
-  		}
-  	}	
+    for(var name in clients) {
+      if(clients[name].socket === socket.id) {
+      array2.push(name)
+     //socket.emit("disconnectUL",array2);
+      break;
+      }
+    } 
   })
 
 });
-
-
 
 
 
