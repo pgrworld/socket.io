@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var imp = require("./app.js")
 var today = ""
+var month = ""
 var time = ""
 var con = mysql.createConnection({
   host: "localhost",
@@ -25,7 +26,10 @@ var con = mysql.createConnection({
 
 exports.function2=function(){
 	today=new Date();
-	time= today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	month=today.getMonth();
+	month1=month+1
+	time= today.getFullYear()+":"+month1+":"+ today.getDate()+":"+today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	console.log(time)
 	var sql = "INSERT INTO socketTABLE1 (JOINUSERS,FROMUSER,TOUSER,MSG,TIME) VALUES ('"+imp.fromuser+"','"+imp.fromuser+"','"+imp.touser+"','"+imp.msg+"','"+time+"')";
     con.query(sql, function (err, res) {
     if (err) throw err;
@@ -44,4 +48,3 @@ exports.clearDATA=function(){
 		}
 	});
 }
-
