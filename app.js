@@ -26,7 +26,6 @@ var array2 = []                    //leftout users list
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){    
-   // array.push(data.username)
     exports.joinuser = data.username
     clients[data.username] = {
     "socket": socket.id
@@ -37,12 +36,11 @@ io.sockets.on('connection', function (socket) {
 
      exports.myFunction = function(){
      var output = sql.output;
-     socket.emit("output",array,array2,output);
-     }
-          
+     socket.emit("output",array2,array,output); 
+     }         
   }); 
     
-
+    
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username );  
    exports.fromuser=data.text
@@ -81,6 +79,8 @@ io.sockets.on('connection', function (socket) {
   })
 
 });
+
+
 
 
 
