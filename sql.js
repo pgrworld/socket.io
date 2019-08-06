@@ -18,7 +18,7 @@ var con = mysql.createConnection({
    if (err){
       throw err;
    }else{
-      console.log(res)
+     // console.log(res)
     }
    });
 };
@@ -36,8 +36,6 @@ exports.function2=function(){
     console.log("SQL: JOINUSERS & FROMUSER & TOUSER & MSG inserted");
     });
 }
-
-//today.getYear()+":"+ today.getMonth()+":"+ today.getDate()+":"+
 
 exports.clearDATA=function(){
 	con.query('delete from socketTABLE1 where TOUSER=?',[imp.joinuser],function(err,res){
