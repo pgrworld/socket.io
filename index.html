@@ -33,20 +33,18 @@
   </ul>
 </form>
 
- <p id="userlist"></p>
+<!--  <p id="userlist"></p>  -->
+ <p id="test"></p>
  <p id="output"></p>
- <p id="disconnectUL"></p> 
 
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 
 
 
-
   <script>
   var socket = io.connect('http://localhost:3000');
   var user = ""
-  // var disconnectedUL=""
   $(".username-form").on("submit", function(){
     
    var username=$(this).children("input").val();
@@ -58,11 +56,27 @@
     $("#username").text(username);
     chat_form.show();
     
-    socket.on('output', function(data1,data2,data3){
-    document.getElementById('userlist').innerHTML ="USERSLIST:  "+data1;
-    document.getElementById('disconnectUL').innerHTML ="Disconnected Userslist : "+data2
-    document.getElementById('output').innerHTML ="previous msgs: "+data3;  
-    });
+    socket.on('output', function(data2,data1,output){   
+    //var res=[]
+    target = document.getElementById('test');
+    for(var i=0;i<data1.length;i++){
+      var elem = document.createElement('span'),
+      text = document.createTextNode(data1[i]);
+      elem.appendChild(text);
+      
+    if(data1[i]==data2[i]){
+       //res.push(data2[i])
+       elem.style.color = 'red'
+    }else{ 
+      //res.push(data1[i])
+      elem.style.color = 'green'
+    }
+    target.appendChild(elem);
+  }
+
+   document.getElementById('output').innerHTML ="previous msgs: "+output;           
+   // document.getElementById('userlist').innerHTML ="data2:  "+data2;
+   });
     return false;
  });
 
@@ -84,7 +98,7 @@
  // Whenever we receieve a message, append it to the <ul>
    socket.on("add-message", function(data,array,output){
    $("#messages").append($("<li>", {
-   "text":"New Msg From "+data.text+":"+data.content    //+" "+ " USERSLIST: "+array+" "+"previous msg:"+output
+   "text":"New Msg From "+data.text+":"+data.content 
    }));
   });
 
