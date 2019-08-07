@@ -9,7 +9,7 @@ console.log("running on port NO:3000");
 var clients = {};
 
 function handler (req, res) {
-  fs.readFile(__dirname + '/index.html',
+  fs.readFile(__dirname + '/views/index.html',
   function (err, data) {
     if (err) {
       res.writeHead(500);
@@ -24,6 +24,7 @@ var array = ""                     //joining users list
 var array2 = []                    //leftout users list
 var array3= []                     //userslist
 var del=""                         //deleting user name
+
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){ 
@@ -34,12 +35,10 @@ io.sockets.on('connection', function (socket) {
     "socket": socket.id
   }; 
 
-     array = Object.keys(clients)
-      console.log(array.length)
-      console.log(array3.length)
-     if(array.length != array3.length){
+      array = Object.keys(clients)
+      if(array.length != array3.length){
       var position=array2.indexOf(del)
-     // delete array2[0]
+      // delete array2[0]
       delete array2[position]  
      }
 
@@ -89,12 +88,7 @@ io.sockets.on('connection', function (socket) {
     } 
   })
 
-});
-
-
-
-
-
+}); 
 
 
 
