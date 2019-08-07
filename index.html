@@ -33,7 +33,6 @@
   </ul>
 </form>
 
-<!--  <p id="userlist"></p>  -->
  <p id="test"></p>
  <p id="output"></p>
 
@@ -57,7 +56,6 @@
     chat_form.show();
     
     socket.on('output', function(data2,data1,output){   
-    //var res=[]
     target = document.getElementById('test');
     for(var i=0;i<data1.length;i++){
       var elem = document.createElement('span'),
@@ -65,10 +63,8 @@
       elem.appendChild(text);
       
     if(data1[i]==data2[i]){
-       //res.push(data2[i])
        elem.style.color = 'red'
     }else{ 
-      //res.push(data1[i])
       elem.style.color = 'green'
     }
     target.appendChild(elem);
@@ -79,6 +75,7 @@
    });
     return false;
  });
+
 
   // Chat form
  var chat_form = $(".chat-form");
@@ -110,4 +107,5 @@
 </script>
 </body>
 </html>
+
 
