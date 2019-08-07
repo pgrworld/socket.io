@@ -22,17 +22,28 @@ function handler (req, res) {
 
 var array = ""                     //joining users list
 var array2 = []                    //leftout users list
-
+var array3= []                     //userslist
+var del=""                         //deleting user name
 io.sockets.on('connection', function (socket) {
  
-  socket.on('add-user', function(data){    
+  socket.on('add-user', function(data){ 
+     del=data.username 
+     array3.push(data.username)
     exports.joinuser = data.username
     clients[data.username] = {
     "socket": socket.id
   }; 
 
      array = Object.keys(clients)
-     sql.function1()
+      console.log(array.length)
+      console.log(array3.length)
+     if(array.length != array3.length){
+      var position=array2.indexOf(del)
+     // delete array2[0]
+      delete array2[position]  
+     }
+
+      sql.function1()
 
      exports.myFunction = function(){
      var output = sql.output;
@@ -40,7 +51,7 @@ io.sockets.on('connection', function (socket) {
      }         
   }); 
     
-    
+
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username );  
    exports.fromuser=data.text
@@ -79,7 +90,6 @@ io.sockets.on('connection', function (socket) {
   })
 
 });
-
 
 
 
