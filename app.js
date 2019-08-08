@@ -24,15 +24,20 @@ var array = ""                     //joining users list
 var array2 = []                    //leftout users list
 var array3= []                     //userslist
 var del=""                         //deleting user name
+var joinuser=""                  //exporting variable
+var fromuser=""
+var touser=""
+var msg=""
 
 io.sockets.on('connection', function (socket) {
  
   socket.on('add-user', function(data){ 
      del=data.username 
      array3.push(data.username)
-    exports.joinuser = data.username
-    clients[data.username] = {
-    "socket": socket.id
+     joinuser=data.username
+     //exports.joinuser = data.username
+     clients[data.username] = {
+     "socket": socket.id
   }; 
 
       array = Object.keys(clients)
@@ -42,8 +47,7 @@ io.sockets.on('connection', function (socket) {
       delete array2[position]  
      }
 
-      sql.function1()
-
+     sql.function1(joinuser)                  //joinuser parameter using in sql.js
      exports.myFunction = function(){
      var output = sql.output;
      socket.emit("output",array2,array,output); 
@@ -52,15 +56,17 @@ io.sockets.on('connection', function (socket) {
     
 
    socket.on('private-message', function(data){
-   console.log(data.text +":" +data.content + " to " + data.username );  
-   exports.fromuser=data.text
-   exports.touser=data.username
-   exports.msg=data.content
+   console.log(data.text +":" +data.content + " to " + data.username ); 
+   var array4=[] 
+   fromuser=data.text
+   array4.push(fromuser)
+   touser=data.username
+   msg=data.content
 
-     sql.function2()
+     sql.function2(fromuser,touser,msg)
     //sql.clearDATA()
 
-   if (clients[data.username]){
+   if (clients[data.username] && array4.indexOf(fromuser)){
    io.sockets.connected[clients[data.username].socket].emit("add-message", data);    //array,sql.output);
      } else {
       console.log("User does not exist: " + data.username); 
@@ -89,7 +95,5 @@ io.sockets.on('connection', function (socket) {
   })
 
 }); 
-
-
 
 
