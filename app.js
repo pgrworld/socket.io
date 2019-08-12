@@ -1,17 +1,23 @@
 var app = require('http').createServer(handler);
 var io = require('socket.io').listen(app);
+var fs = require('fs');
 var sql = require("./sql.js");
-//var fs = require('fs');
-//var path = require("path");
 var nStatic = require('node-static');
-var fileServer = new nStatic.Server('./views');
 
 app.listen(3000);
 console.log("running on port NO:3000");
 
 function handler (req, res) {
-     fileServer.serve(req, res);;
-};
+  fs.readFile(__dirname + '/views',
+  function (err, data) {
+    if (err) {
+      res.writeHead(500);
+      return res.end('Error loading index.html');
+    }
+    res.writeHead(200);
+    res.end(data);
+  });
+ }
 
 var clients = {};
 var array = ""                     //joining users list
@@ -37,7 +43,6 @@ io.sockets.on('connection', function (socket) {
       array = Object.keys(clients)
       if(array.length != array3.length){
       var position=array2.indexOf(del)
-      // delete array2[0]
       delete array2[position] 
      }
 
