@@ -1,25 +1,43 @@
-var app = require('http').createServer(handler);
-var io = require('socket.io').listen(app);
-var fs = require('fs');
-var sql = require("./sql.js");
+// var app = require('http').createServer(handler);
+// var io = require('socket.io').listen(app);
+// var fs = require('fs');
+// var sql = require("./sql.js");
 
-app.listen(3000);
-console.log("running on port NO:3000");
+// app.listen(3000);
+// console.log("running on port NO:3000");
+
+// function handler (req, res) {
+//   fs.readFile(__dirname + '/views/index.html',
+//   function (err, data) {
+//     if (err) {
+//       res.writeHead(500);
+//       return res.end('Error loading index.html');
+//     }
+//     res.writeHead(200);
+//     res.end(data);
+//   });
+// };
+
+
+var express = require('express');
+var app = express();
+var path    = require("path");
+var sql = require("./sql.js");
+ app.use(express.static('client',));
+ app.use(express.static('css',));
+
+//routes
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname+'/views/index.html'));
+});
+
+
+server = app.listen(3000)
+console.log("running on port:3000");
+
+const io = require("socket.io")(server)
 
 var clients = {};
-
-function handler (req, res) {
-  fs.readFile(__dirname + '/views/index.html',
-  function (err, data) {
-    if (err) {
-      res.writeHead(500);
-      return res.end('Error loading index.html');
-    }
-    res.writeHead(200);
-    res.end(data);
-  });
- }
-
 var array = ""                     //joining users list
 var array2 = []                    //leftout users list
 var array3= []                     //userslist
@@ -44,7 +62,7 @@ io.sockets.on('connection', function (socket) {
       if(array.length != array3.length){
       var position=array2.indexOf(del)
       // delete array2[0]
-      delete array2[position]  
+      delete array2[position] 
      }
 
      sql.function1(joinuser)                  //joinuser parameter using in sql.js
@@ -54,19 +72,18 @@ io.sockets.on('connection', function (socket) {
      }         
   }); 
     
+    
 
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username ); 
-   var array4=[] 
    fromuser=data.text
-   array4.push(fromuser)
    touser=data.username
    msg=data.content
 
      sql.function2(fromuser,touser,msg)
     //sql.clearDATA()
 
-   if (clients[data.username] && array4.indexOf(fromuser)){
+   if (clients[data.username] && array3.indexOf(joinuser)){
    io.sockets.connected[clients[data.username].socket].emit("add-message", data);    //array,sql.output);
      } else {
       console.log("User does not exist: " + data.username); 
@@ -75,12 +92,12 @@ io.sockets.on('connection', function (socket) {
 
   // //Removing the socket on disconnect
   // socket.on('disconnect', function() {
-  // 	for(var name in clients) {
-  // 		if(clients[name].socket === socket.id) {
-  // 			delete clients[name];
-  // 			break;
-  // 		}
-  // 	}	
+  //  for(var name in clients) {
+  //    if(clients[name].socket === socket.id) {
+  //      delete clients[name];
+  //      break;
+  //    }
+  //  } 
   // })
 
     //Removing the socket on disconnect
@@ -88,12 +105,9 @@ io.sockets.on('connection', function (socket) {
     for(var name in clients) {
       if(clients[name].socket === socket.id) {
       array2.push(name)
-     //socket.emit("disconnectUL",array2);
       break;
       }
     } 
   })
 
 }); 
-
-
