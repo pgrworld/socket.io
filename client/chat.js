@@ -1,5 +1,4 @@
 $(function(){
-  document.write("testing")
   var socket = io.connect('http://localhost:3000');
   var user = ""
   $(".username-form").on("submit", function(){
