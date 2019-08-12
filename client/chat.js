@@ -1,4 +1,5 @@
 $(function(){
+  document.write("testing")
   var socket = io.connect('http://localhost:3000');
   var user = ""
   $(".username-form").on("submit", function(){
@@ -19,8 +20,7 @@ $(function(){
     text = document.createTextNode(data1[i]);
     elem.appendChild(text);
       
-    if(data2.includes(data1[i])){
-      //if(data[i]==data2[i])
+   if(data2.includes(data1[i])){
       elem.style.color = 'red'
     }else{ 
       elem.style.color = 'green'
@@ -33,6 +33,7 @@ $(function(){
    });
     return false;
  });
+
 
 
   // Chat form
