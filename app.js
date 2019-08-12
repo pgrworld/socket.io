@@ -1,41 +1,17 @@
-// var app = require('http').createServer(handler);
-// var io = require('socket.io').listen(app);
-// var fs = require('fs');
-// var sql = require("./sql.js");
-
-// app.listen(3000);
-// console.log("running on port NO:3000");
-
-// function handler (req, res) {
-//   fs.readFile(__dirname + '/views/index.html',
-//   function (err, data) {
-//     if (err) {
-//       res.writeHead(500);
-//       return res.end('Error loading index.html');
-//     }
-//     res.writeHead(200);
-//     res.end(data);
-//   });
-// };
-
-
-var express = require('express');
-var app = express();
-var path    = require("path");
+var app = require('http').createServer(handler);
+var io = require('socket.io').listen(app);
 var sql = require("./sql.js");
- app.use(express.static('client',));
- app.use(express.static('css',));
+//var fs = require('fs');
+//var path = require("path");
+var nStatic = require('node-static');
+var fileServer = new nStatic.Server('./views');
 
-//routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname+'/views/index.html'));
-});
+app.listen(3000);
+console.log("running on port NO:3000");
 
-
-server = app.listen(3000)
-console.log("running on port:3000");
-
-const io = require("socket.io")(server)
+function handler (req, res) {
+     fileServer.serve(req, res);;
+};
 
 var clients = {};
 var array = ""                     //joining users list
@@ -73,7 +49,6 @@ io.sockets.on('connection', function (socket) {
   }); 
     
     
-
    socket.on('private-message', function(data){
    console.log(data.text +":" +data.content + " to " + data.username ); 
    fromuser=data.text
