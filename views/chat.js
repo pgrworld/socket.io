@@ -1,9 +1,6 @@
 $(function(){
-
   var socket = io.connect('http://localhost:3000');
   var user = ""
-  document.write("checking")
-  document.getElementById('checking').value="checking" 
   $(".username-form").on("submit", function(){
     
    var username=$(this).children("input").val();
@@ -22,7 +19,8 @@ $(function(){
     text = document.createTextNode(data1[i]);
     elem.appendChild(text);
       
-    if(data1[i]==data2[i]){
+    if(data2.includes(data1[i])){
+      //if(data[i]==data2[i])
       elem.style.color = 'red'
     }else{ 
       elem.style.color = 'green'
