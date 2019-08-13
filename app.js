@@ -5,8 +5,6 @@ var sql = require("./sql.js");
 //var path = require("path");
 var nStatic = require('node-static');
 var fileServer = new nStatic.Server('./views');
-var fileServer = new nStatic.Server('./client');
-var fileServer = new nStatic.Server('./css');
 
 app.listen(3000);
 console.log("running on port NO:3000");
@@ -32,7 +30,6 @@ io.sockets.on('connection', function (socket) {
      del=data.username 
      array3.push(data.username)
      joinuser=data.username
-     //exports.joinuser = data.username
      clients[data.username] = {
      "socket": socket.id
   }; 
@@ -40,7 +37,6 @@ io.sockets.on('connection', function (socket) {
       array = Object.keys(clients)
       if(array.length != array3.length){
       var position=array2.indexOf(del)
-      // delete array2[0]
       delete array2[position] 
      }
 
@@ -56,16 +52,18 @@ io.sockets.on('connection', function (socket) {
    console.log(data.text +":" +data.content + " to " + data.username ); 
    fromuser=data.text
    touser=data.username
+   var TOUSERS=touser.split(" ")
    msg=data.content
 
      sql.function2(fromuser,touser,msg)
     //sql.clearDATA()
-
-   if (clients[data.username] && array3.indexOf(joinuser)){
-   io.sockets.connected[clients[data.username].socket].emit("add-message", data);    //array,sql.output);
+   for(var i=0;i<TOUSERS.length;i++){
+   if (clients[TOUSERS[i]]){
+   io.sockets.connected[clients[TOUSERS[i]].socket].emit("add-message", data);   
      } else {
       console.log("User does not exist: " + data.username); 
      }
+    }
    });
 
   // //Removing the socket on disconnect
